@@ -10,4 +10,14 @@
 
 @interface PoperView : UIView
 
+
+
+- (instancetype)initWithSuperViewFrame:(CGRect)frame andData:(NSArray *)dataArray;
+
+- (void)dismissView;
+
+- (void)showView;
+
+- (void)reloadTableViewData;
+
 @end

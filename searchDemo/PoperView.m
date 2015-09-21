@@ -7,15 +7,59 @@
 //
 
 #import "PoperView.h"
+#define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
 
+@interface PoperView()<UITableViewDataSource, UITableViewDelegate>
+
+@property (strong, nonatomic) UITableView *tableView;
+@property (copy, nonatomic) NSArray *dataArray;
+
+@end
+
+static NSString *cellID = @"cellID";
 @implementation PoperView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+
+- (instancetype)initWithSuperViewFrame:(CGRect)frame andData:(NSArray *)dataArray{
+    self = [super init];
+    if (self != nil) {
+        _dataArray = [dataArray copy];
+        self.frame = CGRectMake(frame.origin.x, frame.origin.y + frame.size.height, frame.size.width, SCREEN_HEIGHT - frame.origin.y - frame.size.height);
+        _tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        _tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
+        [self addSubview:_tableView];
+        
+        
+    }
+    return self;
 }
-*/
+
+- (void)showView{
+    
+}
+
+- (void)dismissView{
+    [self removeFromSuperview];
+}
+
+- (void)reloadTableViewData{
+    [_tableView reloadData];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
+    }
+    cell.textLabel.text = _dataArray[indexPath.row];
+    return cell;
+}
+
 
 @end
