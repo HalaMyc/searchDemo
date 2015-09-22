@@ -28,6 +28,9 @@
     self.textField.borderStyle = UITextBorderStyleRoundedRect;
     [self.view addSubview:self.textField];
     
+    _poperView = [[PoperView alloc]initWithSuperViewFrame:self.textField.frame  andData: nil];
+    [self.view addSubview:_poperView];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldChanged) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
@@ -45,25 +48,19 @@
 
 - (void)getSearchData{
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSString *apikey = @"1344a966accdd811c13c3b35e01f8405";
-    AFHTTPRequestSerializer *serializer = [[AFHTTPRequestSerializer alloc]init];
-    [serializer setValue:apikey forHTTPHeaderField: @"apikey"];
-    manager.requestSerializer = serializer;
     NSString *s = _textField.text;
     
-    AFHTTPRequestOperation *op = [manager GET:@"http://apis.baidu.com/geekery/music/query" parameters:@{@"s":s} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPRequestOperation *op = [manager GET:@"http://localhost:3000/" parameters:@{@"s":s} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (_operation.isCancelled) {
             NSLog(@"operation is canceled");
         }else{
             NSLog(@"%@",responseObject);
-            NSDictionary *dic = (NSDictionary *)responseObject;
-            NSArray *array = dic[@"data"][@"data"][@"list"];
+            NSArray *array = (NSArray *)responseObject;
             NSMutableArray *dataArray = [NSMutableArray array];
             for (NSDictionary *dic in array) {
-                [dataArray addObject:dic[@"songName"]];
+                [dataArray addObject:dic[@"s"]];
             }
-            _poperView = [[PoperView alloc]initWithSuperViewFrame:self.view.bounds andData:dataArray];
-            [self.view addSubview:_poperView];
+            [_poperView reloadTableViewDataWith:dataArray];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", _operation.description);

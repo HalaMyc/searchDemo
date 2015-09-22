@@ -44,12 +44,16 @@ static NSString *cellID = @"cellID";
     [self removeFromSuperview];
 }
 
-- (void)reloadTableViewData{
+- (void)reloadTableViewDataWith:(NSMutableArray *)array{
+    _dataArray = [array copy];
     [_tableView reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _dataArray.count;
+    if (_dataArray != nil) {
+        return _dataArray.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -18,6 +18,6 @@
 
 - (void)showView;
 
-- (void)reloadTableViewData;
+- (void)reloadTableViewDataWith:(NSMutableArray *)array;
 
 @end
